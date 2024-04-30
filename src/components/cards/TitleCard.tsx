@@ -1,6 +1,19 @@
+import React from "react"
 import Subtitle from "../typography/Subtitle"
 
-function TitleCard({ title, children, topMargin, TopSideButtons }: any) {
+interface TitleCardPropsType {
+  children: React.ReactNode
+  title: string
+  topMargin?: string
+  TopSideButtons?: JSX.Element
+}
+
+function TitleCard({
+  children,
+  title,
+  topMargin,
+  TopSideButtons,
+}: TitleCardPropsType) {
   return (
     <div
       className={

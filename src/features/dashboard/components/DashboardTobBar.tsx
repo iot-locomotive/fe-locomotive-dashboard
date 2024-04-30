@@ -1,21 +1,15 @@
 import ArrowPathIcon from "@heroicons/react/24/outline/ArrowPathIcon"
-import { useLazyGetLocomotiveSummaryQuery } from "../../../services/locomotiveSummary"
-import React, { useEffect } from "react"
+import {
+  LocomotiveSummary,
+  useLazyGetLocomotiveSummaryQuery,
+} from "../../../services/locomotiveSummary"
+import { useEffect } from "react"
 
 interface DashboardTopPropsType {
-  setStatsData: React.Dispatch<
-    React.SetStateAction<
-      {
-        title: string
-        value: number
-        icon: JSX.Element
-        description: string
-      }[]
-    >
-  >
+  handleSetStatsData: (summaryData: LocomotiveSummary | undefined) => void
 }
 
-function DashboardTop({ setStatsData }: DashboardTopPropsType) {
+function DashboardTop({ handleSetStatsData }: DashboardTopPropsType) {
   const [getLocomotiveSummary, { data }] = useLazyGetLocomotiveSummaryQuery()
 
   const refreshData = () => {
@@ -23,26 +17,8 @@ function DashboardTop({ setStatsData }: DashboardTopPropsType) {
   }
 
   useEffect(() => {
-    setStatsData((prev) =>
-      prev.map((item, idx) => {
-        switch (idx) {
-          case 0:
-            item.value = data?.totalLoc || 0
-            break
-          case 1:
-            item.value = data?.totalLocMaintenance || 0
-            break
-          case 2:
-            item.value = data?.totalLocTransit || 0
-            break
-          case 3:
-            item.value = data?.totalLocDeparture || 0
-            break
-        }
-        return item
-      })
-    )
-  }, [data, setStatsData])
+    handleSetStatsData(data)
+  }, [data, handleSetStatsData])
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

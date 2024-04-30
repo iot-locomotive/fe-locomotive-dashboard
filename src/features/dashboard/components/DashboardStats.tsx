@@ -1,4 +1,16 @@
-function DashboardStats({ title, icon, value, description }: any) {
+interface DashboardStatsPropsType {
+  title: string
+  icon: JSX.Element
+  value: string | number
+  description: string
+}
+
+function DashboardStats({
+  title,
+  icon,
+  value,
+  description,
+}: DashboardStatsPropsType) {
   const getDescStyle = () => {
     if (description.includes("↗︎"))
       return "font-bold text-green-700 dark:text-green-300"

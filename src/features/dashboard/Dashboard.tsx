@@ -5,8 +5,11 @@ import ArrowTrendingUpIcon from "@heroicons/react/24/outline/ArrowTrendingUpIcon
 import WrenchScrewdriverIcon from "@heroicons/react/24/outline/WrenchScrewdriverIcon"
 import DashboardStats from "./components/DashboardStats"
 import DoughnutChart from "./components/DoughnutChart"
-import { useGetLocomotiveSummaryQuery } from "../../services/locomotiveSummary"
-import { useEffect, useState } from "react"
+import {
+  LocomotiveSummary,
+  useGetLocomotiveSummaryQuery,
+} from "../../services/locomotiveSummary"
+import { useCallback, useEffect, useState } from "react"
 
 function Dashboard() {
   const [statsData, setStatsData] = useState([
@@ -39,31 +42,38 @@ function Dashboard() {
     pollingInterval: Number(import.meta.env.VITE_DASHBOARD_POLLING_INTERVAL),
   })
 
+  const handleSetStatsData = useCallback(
+    (summaryData: LocomotiveSummary | undefined) => {
+      setStatsData((prev) =>
+        prev.map((item, idx) => {
+          switch (idx) {
+            case 0:
+              item.value = summaryData?.totalLoc || 0
+              break
+            case 1:
+              item.value = summaryData?.totalLocMaintenance || 0
+              break
+            case 2:
+              item.value = summaryData?.totalLocTransit || 0
+              break
+            case 3:
+              item.value = summaryData?.totalLocDeparture || 0
+              break
+          }
+          return item
+        })
+      )
+    },
+    []
+  )
+
   useEffect(() => {
-    setStatsData((prev) =>
-      prev.map((item, idx) => {
-        switch (idx) {
-          case 0:
-            item.value = data?.totalLoc || 0
-            break
-          case 1:
-            item.value = data?.totalLocMaintenance || 0
-            break
-          case 2:
-            item.value = data?.totalLocTransit || 0
-            break
-          case 3:
-            item.value = data?.totalLocDeparture || 0
-            break
-        }
-        return item
-      })
-    )
-  }, [data])
+    handleSetStatsData(data)
+  }, [data, handleSetStatsData])
 
   return (
     <>
-      <DashboardTop setStatsData={setStatsData} />
+      <DashboardTop handleSetStatsData={handleSetStatsData} />
       <div className="grid lg:grid-cols-4 mt-2 md:grid-cols-2 grid-cols-1 gap-6">
         {statsData.map((d, k) => {
           return <DashboardStats key={k} {...d} />

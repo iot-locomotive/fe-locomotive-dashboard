@@ -6,8 +6,8 @@ export interface LocomotiveSummary {
   totalLocMaintenance: number
   totalLocTransit: number
   totalLocDeparture: number
-  createdDate: Date
-  lastModifiedDate: Date
+  createdDate: string
+  lastModifiedDate: string
 }
 
 export const locomotiveSummaryApi = createApi({
